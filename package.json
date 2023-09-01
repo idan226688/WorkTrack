@@ -1,0 +1,25 @@
+{
+  "name": "greenhouse",
+  "version": "1.0.0",
+  "description": "Manage green house",
+  "main": "kaveret.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idan226688/GreenHouse.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/idan226688/GreenHouse/issues"
+  },
+  "homepage": "https://github.com/idan226688/GreenHouse#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1"
+  }
+}
