@@ -28,41 +28,43 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-  
-    const sql = 'SELECT * FROM users WHERE email = ?';
-    connection.query(sql, [email], async (err, results) => {
-      if (err) {
-        console.error('Error fetching user:', err);
-        res.send('Error fetching user.');
+  const email = req.body.email;
+  const password = req.body.password;
+
+  const sql = 'SELECT * FROM users WHERE email = ?';
+  connection.query(sql, [email], async (err, results) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      res.send('Error fetching user.');
+    } else {
+      if (results.length === 0) {
+        res.send('User not found.');
       } else {
-        if (results.length === 0) {
-          res.send('User not found.');
+        const user = results[0];
+        const match = await bcrypt.compare(password, user.password);
+        
+        if (match) {
+          res.send('Login successful.');
+          res.redirect('/submit');
         } else {
-          const user = results[0];
-          const match = await bcrypt.compare(password, user.password);
-          
-          if (match) {
-            res.send('Login successful.');
-          } else {
-            res.send('Incorrect password.');
-          }
+          res.send('Incorrect password.');
         }
       }
-    });
+    }
   });
-  
+});
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 app.get('/submit', (req, res) => {
-    // add authentication later
+    // You can add authentication check here to ensure the user is logged in
+    // For simplicity, we're assuming the user is authenticated
     res.sendFile(__dirname + '/submit.html');
   });
   
   app.post('/submit', (req, res) => {
-    // add authentication later
+    // You can add authentication check here to ensure the user is logged in
+    // For simplicity, we're assuming the user is authenticated
     
     const userId = req.body.userId; // Replace with actual user ID
     const number = req.body.number;
@@ -104,7 +106,7 @@ app.get('/register', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
   
-    //use the registerUser function from the module
+    // Use the registerUser function from the module
     registration.registerUser(name, email, password, (err, result) => {
       if (err) {
         res.send('Error registering user.');
@@ -116,16 +118,14 @@ app.get('/register', (req, res) => {
 
   //check users data at /view_users
 
-  app.get('/view_users', (req, res) => {
-    const sql = 'SELECT id, name, email FROM users';
-    connection.query(sql, (err, results) => {
-      if (err) {
-        console.error('Error fetching user data:', err);
-        res.status(500).json({ error: 'Error fetching user data.' });
-      } else {
-        res.status(200).json(results); // Send the data as JSON
-      }
-    });
+app.get('/view_users', (req, res) => {
+  const sql = 'SELECT id, name, email FROM users';
+  connection.query(sql, (err, results) => {
+    if (err) {
+      console.error('Error fetching user data:', err);
+      res.send('Error fetching user data.');
+    } else {
+      res.render('view_users.html', { users: results });
+    }
   });
-  
-  
+});

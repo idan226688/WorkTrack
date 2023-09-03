@@ -44,6 +44,7 @@ app.post('/login', (req, res) => {
           const match = await bcrypt.compare(password, user.password);
           
           if (match) {
+            // Send a success response, but do not redirect here
             res.send('Login successful.');
           } else {
             res.send('Incorrect password.');
@@ -57,12 +58,14 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 app.get('/submit', (req, res) => {
-    // add authentication later
+    // You can add authentication check here to ensure the user is logged in
+    // For simplicity, we're assuming the user is authenticated
     res.sendFile(__dirname + '/submit.html');
   });
   
   app.post('/submit', (req, res) => {
-    // add authentication later
+    // You can add authentication check here to ensure the user is logged in
+    // For simplicity, we're assuming the user is authenticated
     
     const userId = req.body.userId; // Replace with actual user ID
     const number = req.body.number;
@@ -104,7 +107,7 @@ app.get('/register', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
   
-    //use the registerUser function from the module
+    // Use the registerUser function from the module
     registration.registerUser(name, email, password, (err, result) => {
       if (err) {
         res.send('Error registering user.');

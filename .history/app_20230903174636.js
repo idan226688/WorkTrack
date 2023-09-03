@@ -104,7 +104,7 @@ app.get('/register', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
   
-    //use the registerUser function from the module
+    // Use the registerUser function from the module
     registration.registerUser(name, email, password, (err, result) => {
       if (err) {
         res.send('Error registering user.');

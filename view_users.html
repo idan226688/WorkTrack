@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Users</title>
+</head>
+<body>
+    <h1>Registered Users</h1>
+    <ul id="userList"></ul>
+    
+    <script>
+        fetch('/view_users')
+            .then(response => response.json())
+            .then(users => {
+                const userList = document.getElementById('userList');
+                users.forEach(user => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Name: ${user.name}, Email: ${user.email}`;
+                    userList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    </script>
+</body>
+</html>
+
