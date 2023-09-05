@@ -1,9 +1,11 @@
 const db = require('../util/database'); // Import the database pool
+const path = require('path');
+const submitpath = path.join(__dirname, '..', '/pages/submit.html');
 
 function setupSubmitRoute(app) {
   // Display the submission form
   app.get('/submit', (req, res) => {
-    res.sendFile(__dirname + '/submit.html');
+    res.sendFile(submitpath);
   });
 
   // Handle form submission

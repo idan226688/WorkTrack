@@ -1,5 +1,9 @@
+const express = require('express');
+const app = express();
 const bcrypt = require('bcrypt');
 const db = require('../util/database');
+const path = require('path');
+const registerpath = path.join(__dirname, '..', '/pages/register.html');
 
 async function registerUser(name, email, password) {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,6 +30,10 @@ async function registerUser(name, email, password) {
 }
 
 function setupRegistrationRoute(app) {
+  app.get('/register', (req, res) => {
+    console.log('Accessing /register route');
+    res.sendFile(registerpath);
+  });
   app.post('/register', async (req, res) => {
     const { name, email, password, confirmPassword } = req.body;
 

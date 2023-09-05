@@ -1,6 +1,9 @@
+const express = require('express');
+const app = express();
 const bcrypt = require('bcrypt');
-const db = require('../util/database'); // Import the database pool
-
+const db = require('../util/database');
+const path = require('path');
+const loginpath=path.join(__dirname, '..', '/pages/login.html');
 async function loginUser(email, password) {
   try {
     // Check if the email exists in the database
@@ -24,6 +27,9 @@ async function loginUser(email, password) {
 }
 
 function setupLoginRoute(app) {
+  app.get('/', (req, res) => {
+        res.sendFile(loginpath);
+      });
   app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
