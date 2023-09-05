@@ -4,7 +4,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 const userRegistration = require('./routes/userRegistration');
-const db = require('./util/database'); // Import your database connection
+const db = require('./util/database'); 
 
 const app = express();
 const port = 3000;
