@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submit Data</title>
+</head>
+<body>
+    <h1>Submit Data</h1>
+    <form method="POST" action="/submit">
+        <label for="number">Number:</label>
+        <input type="text" name="number" required><br><br>
+
+        <label for="date">Date:</label>
+        <input type="date" name="date" required><br><br>
+
+        <label for="job">Job:</label>
+        <select name="job" required>
+            <option value="harvest">Harvest</option>
+            <option value="trim">Trim</option>
+        </select><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

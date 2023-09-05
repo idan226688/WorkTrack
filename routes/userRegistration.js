@@ -1,43 +1,48 @@
 const bcrypt = require('bcrypt');
-const mysql = require('mysql');
+const db = require('../util/database');
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'username',
-  password: 'password',
-  database: 'your_database_name'
-});
+async function registerUser(name, email, password) {
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err);
-  } else {
-    console.log('Connected to the database');
-  }
-});
+  try {
+    // Check if the email already exists in the database
+    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
 
-function registerUser(name, email, password, callback) {
-  // Hash the password before saving it to the database
-  bcrypt.hash(password, 10, (err, hashedPassword) => {
-    if (err) {
-      console.error('Error hashing password:', err);
-      callback(err, null);
-      return;
+    if (rows.length > 0) {
+      throw new Error('Email already exists.');
     }
 
-    const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-    connection.query(sql, [name, email, hashedPassword], (err, result) => {
-      if (err) {
-        console.error('Error registering user:', err);
-        callback(err, null);
-      } else {
-        console.log('User registered:', result);
-        callback(null, result);
-      }
-    });
+    // Insert the user into the database
+    await db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [
+      name,
+      email,
+      hashedPassword,
+    ]);
+
+    return { success: true, message: 'User registered successfully.' };
+  } catch (error) {
+    return { success: false, message: error.message || 'Error registering user.' };
+  }
+}
+
+function setupRegistrationRoute(app) {
+  app.post('/register', async (req, res) => {
+    const { name, email, password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.send('Passwords do not match.');
+    }
+
+    const result = await registerUser(name, email, password);
+
+    if (result.success) {
+      res.redirect('/login');
+    } else {
+      res.send(result.message);
+    }
   });
 }
 
 module.exports = {
-  registerUser
+  setupRegistrationRoute,
 };
